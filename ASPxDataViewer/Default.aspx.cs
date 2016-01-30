@@ -138,15 +138,15 @@ public partial class Default : Page
 
                 row = GridOrders.FooterRow;
 
-                textBox = (TextBox)row.FindControl("TbDescription");
+                textBox = (TextBox)row.FindControl("TbDescriptionNew");
                 if (textBox != null)
                     descr = textBox.Text;
 
-                textBox = (TextBox)row.FindControl("TbAmount");
+                textBox = (TextBox)row.FindControl("TbAmountNew");
                 if (textBox != null)
                     decimal.TryParse(textBox.Text, out amount);
 
-                textBox = (TextBox)row.FindControl("TbPrice");
+                textBox = (TextBox)row.FindControl("TbPriceNew");
                 if (textBox != null)
                     decimal.TryParse(textBox.Text, out price);
 
@@ -223,6 +223,10 @@ public partial class Default : Page
 
         //GridOrders.DataSource = items;
         BindGrid();
+
+    }
+    protected void GridOrders_SelectedIndexChanged(object sender, EventArgs e)
+    {
 
     }
 }

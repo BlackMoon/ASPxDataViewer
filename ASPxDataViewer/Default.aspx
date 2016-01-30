@@ -28,7 +28,7 @@
 
         window.onresize = function (e) {
             var h = $(window).height();
-            $grid.height(h - $grid.offset().top - footerHeight - 8);       // 8 = (body margin)
+            //$grid.height(h - $grid.offset().top - footerHeight - 8);       // 8 = (body margin)
         }
     </script>
 </head>
@@ -48,10 +48,12 @@
                 <ContentTemplate>
                     <asp:GridView ID="GridOrders" runat="server" Width="100%" AutoGenerateColumns="False" AllowSorting="True" ShowHeaderWhenEmpty="True" ShowFooter="True"
                         BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" DataKeyNames="Code"
-                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing" OnSorting="GridOrders_OnSorting" >
+                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing" OnSorting="GridOrders_OnSorting" OnSelectedIndexChanged="GridOrders_SelectedIndexChanged" >
 
                         <Columns>
                             <asp:TemplateField>
+                                <HeaderStyle Width="120" />
+                                <ItemStyle Width="120" HorizontalAlign="Center"/>
                                 <ItemTemplate>
                                     <asp:LinkButton ID="lbEdit" CommandArgument='<%# Eval("Code") %>' CommandName="EditRow" ForeColor="#8C4510" runat="server">Изменить</asp:LinkButton>
                                     <asp:LinkButton ID="lbDelete" CommandArgument='<%# Eval("Code") %>' CommandName="DeleteRow" ForeColor="#8C4510" runat="server" 
@@ -62,17 +64,19 @@
                                     <asp:LinkButton ID="lbCancel" CommandArgument='<%# Eval("Code") %>' CommandName="CancelUpdate" ForeColor="#8C4510" runat="server" CausesValidation="false">Отмена</asp:LinkButton>
                                 </EditItemTemplate>
                                 <FooterTemplate>
-                                    <asp:LinkButton ID="lbInsert" ValidationGroup="InsertRow" runat="server" CommandName="InsertRow">Создать</asp:LinkButton>
+                                    <asp:LinkButton ID="lbInsert" ValidationGroup="New" runat="server" CommandName="InsertRow" >Создать</asp:LinkButton>
                                 </FooterTemplate>
                             </asp:TemplateField>
 
                             <asp:TemplateField HeaderText="№">
+                                <ItemStyle HorizontalAlign="Center"/>
                                 <ItemTemplate>
                                     <%# Container.DataItemIndex + 1 %>
                                 </ItemTemplate>
                             </asp:TemplateField>
 
                             <asp:TemplateField HeaderText="Код" InsertVisible="False" SortExpression="Code">
+                                <ItemStyle Width="120" HorizontalAlign="Center"/>
                                 <EditItemTemplate>
                                     <asp:Label ID="Label1" runat="server" Text='<%# Eval("Code") %>'/>
                                 </EditItemTemplate>
@@ -82,39 +86,50 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Описание" >
                                 <EditItemTemplate>
-                                    <asp:TextBox ID="TbDescription" runat="server" Text='<%# Bind("Description") %>' Width="100%"></asp:TextBox>
+                                    <asp:TextBox ID="TbDescription" runat="server" Text='<%# Bind("Description") %>' Width="100%"/>
                                 </EditItemTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" Text='<%# Eval("Description") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbDescription" runat="server" Width="100%"/>
+                                    <asp:TextBox ID="TbDescriptionNew" runat="server" Width="100%"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Количество" >
+                                <HeaderStyle Width="160" />
+                                <ItemStyle Width="160" />
                                 <EditItemTemplate>
-                                    <asp:TextBox ID="TbAmount" runat="server" Text='<%# Bind("Amount") %>' Width="100%"></asp:TextBox>
+                                    <asp:TextBox ID="TbAmount" runat="server" Text='<%# Bind("Amount") %>' Width="140"/>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
+                                        ControlToValidate="TbAmount" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" >
+                                    </asp:RequiredFieldValidator>
                                 </EditItemTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" Text='<%# Eval("Amount") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbAmount" runat="server" Width="100%"/>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
-                                        ControlToValidate="TbAmount" InitialValue="Select Gender" Text="*" ForeColor="Red">
+                                    <asp:TextBox ID="TbAmountNew" runat="server" Width="140" />
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
+                                        ControlToValidate="TbAmountNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" ValidationGroup="New">
                                     </asp:RequiredFieldValidator>
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Цена">
+                                <HeaderStyle Width="160" />
+                                <ItemStyle Width="160" />
                                 <EditItemTemplate>
-                                    <asp:TextBox ID="TbPrice" runat="server" Text='<%# Bind("Price") %>' Width="100%"/>
+                                    <asp:TextBox ID="TbPrice" runat="server" Text='<%# Bind("Price") %>' Width="140"/>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" 
+                                        ControlToValidate="TbPrice" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}">
+                                    </asp:RequiredFieldValidator>
                                 </EditItemTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" Text='<%# Eval("Price") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbPrice" runat="server" Width="100%"/>
-                                    
+                                    <asp:TextBox ID="TbPriceNew" runat="server" Width="140"/>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" 
+                                        ControlToValidate="TbPriceNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}" ValidationGroup="New"></asp:RequiredFieldValidator>
                                 </FooterTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -128,16 +143,17 @@
                         <SortedDescendingCellStyle BackColor="#F1E5CE" />
                         <SortedDescendingHeaderStyle BackColor="#93451F" />
                     </asp:GridView>
-
-                    <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="Insert" ForeColor="Red" runat="server" />
-                    <asp:ValidationSummary ID="ValidationSummary2" ForeColor="Red" runat="server" />
                 </ContentTemplate>
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="BtnShow" EventName="Click" />
                 </Triggers>
 
             </asp:UpdatePanel>
+             
         </div>
+        
+        <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="New" ForeColor="Red" runat="server" />
+        <asp:ValidationSummary ID="ValidationSummary2" ForeColor="Red" runat="server" />
 
         <div id="divFooter">
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
