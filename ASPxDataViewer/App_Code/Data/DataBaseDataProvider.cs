@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Data
 {
@@ -14,20 +15,20 @@ namespace Data
             // TODO: Add constructor logic here
             //
         }
-
-        public void Add()
+        
+        public void Add(IEnumerable<Order> items)
         {
             throw new NotImplementedException();
         }
 
-        public void Save()
+        public void Save(IEnumerable<Order> items)
         {
             throw new NotImplementedException();
         }
 
         public IEnumerable<Order> Read()
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<Order>();
         }
     }
 }

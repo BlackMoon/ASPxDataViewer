@@ -2,10 +2,10 @@
 
 namespace Data
 {
-    public interface IDataProvider<out T> where T : class
+    public interface IDataProvider<T> where T : class
     {
-        void Add();
-        void Save();
+        void Add(IEnumerable<T> items);
+        void Save(IEnumerable<T> items);
 
         IEnumerable<T> Read();
     }
