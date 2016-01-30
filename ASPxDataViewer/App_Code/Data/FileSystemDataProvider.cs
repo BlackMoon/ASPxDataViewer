@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Data
 {
     /// <summary>
     /// Summary description for FileSystemDataProvider
     /// </summary>
-    public class FileSystemDataProvider : IDataProvider
+    public class FileSystemDataProvider : IDataProvider<Order>
     {
         public FileSystemDataProvider()
         {
@@ -24,7 +25,7 @@ namespace Data
             throw new NotImplementedException();
         }
 
-        public void Read()
+        public IEnumerable<Order> Read()
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,5 @@
 ﻿
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Default" %>
 
 <!DOCTYPE html>
 
@@ -12,15 +12,22 @@
     <div>
         <asp:ScriptManager ID="ScriptManager1" runat="server"/>
 
-        <asp:DropDownList ID="DropDownList1" runat="server"/>
-
-        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-            <ContentTemplate>
-                <asp:GridView ID="GridView1" runat="server"/>        
-            </ContentTemplate>
-        </asp:UpdatePanel>
+        <asp:DropDownList ID="ListSrcProviderTypes" runat="server"/>
+        <asp:Button ID="BtnShow" runat="server" Text="Показать" Width="100px" OnClick="BtnShow_Click" />
         
-        <asp:dropdownlist runat="server"/>
+        <div id="divGrid">
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <ContentTemplate>
+                    <asp:GridView ID="GridOrders" runat="server" Width="100%" />
+                </ContentTemplate>
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="BtnShow" EventName="Click" />
+                </Triggers>
+            </asp:UpdatePanel>
+        </div>
+        <asp:dropdownlist ID="ListDstProviderTypes" runat="server"/>
+        <asp:Button ID="BtnAdd" runat="server" Text="Добавить" Width="100px" OnClick="BtnAdd_Click"/>
+        <asp:Button ID="BtnSave" runat="server" Text="Сохранить" Width="100px"/>
     </div>
     </form>
 </body>

@@ -19,9 +19,9 @@
         {
         }
 
-        public IDataProvider GetProvider(ProviderType providerType)
+        public IDataProvider<Order> GetProvider(ProviderType providerType)
         {
-            IDataProvider dataProvider = null;
+            IDataProvider<Order> dataProvider = null;
 
             switch (providerType)
             {

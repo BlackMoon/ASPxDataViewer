@@ -1,10 +1,12 @@
-﻿namespace Data
+﻿using System.Collections.Generic;
+
+namespace Data
 {
-    public interface IDataProvider
+    public interface IDataProvider<out T> where T : class
     {
         void Add();
         void Save();
 
-        void Read();
+        IEnumerable<T> Read();
     }
 }
