@@ -1,6 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Data;
@@ -70,7 +72,7 @@ public partial class Default : Page
     {
         ProviderType providerType;
 
-        string value = ListSrcProviderTypes.SelectedValue;
+        string value = ListDstProviderTypes.SelectedValue;
         Enum.TryParse(value, out providerType);
 
         IDataProvider<Order> dataProvider = ProviderFactory.Instance.GetProvider(providerType);
@@ -95,18 +97,8 @@ public partial class Default : Page
 
     protected void GridOrders_OnRowDataBound(object sender, GridViewRowEventArgs e)
     {
-        GridViewRow row = e.Row;
-        if (row.RowType == DataControlRowType.DataRow)
-        {
-            LinkButton linkButton = (LinkButton) row.FindControl("LinkBtnDblClick");
-            if (linkButton != null)
-            {
-                string jsDoubleClick = ClientScript.GetPostBackClientHyperlink(linkButton, "");
-
-                e.Row.Attributes["ondblclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridOrders, "Edit$" + e.Row.RowIndex);
-            }
-        }
-
+        if (e.Row.RowType == DataControlRowType.DataRow)
+            e.Row.Attributes["ondblclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridOrders, "Edit$" + e.Row.RowIndex);
     }
 
     protected void GridOrders_OnRowCommand(object sender, GridViewCommandEventArgs e)
@@ -211,5 +203,26 @@ public partial class Default : Page
     {
         GridOrders.EditIndex = e.NewEditIndex;
         BindGrid();
+    }
+
+    protected void GridOrders_OnSorting(object sender, GridViewSortEventArgs e)
+    {
+        IEnumerable<Order> items = Orders.Where(o => o.State != ObjectState.Deleted);
+
+        String sortOn = e.SortExpression;
+        
+        
+        if (e.SortDirection == SortDirection.Ascending)
+        {
+            
+            
+            
+
+        //    items = items.AsEnumerable().OrderBy(lambda);
+        }
+
+        //GridOrders.DataSource = items;
+        BindGrid();
+
     }
 }

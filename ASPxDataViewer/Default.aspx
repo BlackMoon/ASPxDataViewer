@@ -10,11 +10,6 @@
             font: 12px Arial,Tahoma,Helvetica,FreeSans,sans-serif;
         }
 
-        .hidden
-        {
-            display:none;
-        }
-
         #divHeader, #divFooter {
              height: 30px;
         }
@@ -53,7 +48,7 @@
                 <ContentTemplate>
                     <asp:GridView ID="GridOrders" runat="server" Width="100%" AutoGenerateColumns="False" AllowSorting="True" ShowHeaderWhenEmpty="True" ShowFooter="True"
                         BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" DataKeyNames="Code"
-                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing">
+                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing" OnSorting="GridOrders_OnSorting" >
 
                         <Columns>
                             <asp:TemplateField>
@@ -121,11 +116,6 @@
                                     <asp:TextBox ID="TbPrice" runat="server" Width="100%"/>
                                     
                                 </FooterTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField Visible="False">
-                                <ItemTemplate>
-                                    <asp:LinkButton ID="LinkBtnDblClick" runat="server" CommandName="DblClick"/>
-                                </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
                         <FooterStyle BackColor="#F7DFB5" ForeColor="#8C4510" />
