@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web;
 // ReSharper disable NotResolvedInText
 
@@ -28,7 +29,48 @@ namespace Data
 
         public void Add(IEnumerable<Order> items)
         {
-            throw new NotImplementedException();
+            IList<Order> orders = items as IList<Order> ?? items.ToList();
+            if (orders.Any())
+            {
+                List<Order> baseItems = Read().ToList();
+                
+                // удалить
+                foreach (Order o in orders.Where(o => o.State == ObjectState.Deleted))
+                {
+                    baseItems.RemoveAll(i => i.Code == o.Code);
+                    o.State = ObjectState.None;
+                }
+
+                // изменить
+                foreach (Order o in orders.Where(o => o.State == ObjectState.Updated))
+                {
+                    Order baseItem = baseItems.Find(i => i.Code == o.Code);
+                    if (baseItem != null)
+                    {
+                        baseItem.Description = o.Description;
+                        baseItem.Amount = o.Amount;
+                        baseItem.Price = o.Price;
+                    }
+
+                    o.State = ObjectState.None;
+                }
+
+                // добавить
+                foreach (Order o in orders.Where(o => o.State == ObjectState.New))
+                {
+                    baseItems.Add(new Order()
+                    {
+                        Code = o.Code,
+                        Description = o.Description,
+                        Amount = o.Amount,
+                        Price = o.Price
+                    });
+
+                    o.State = ObjectState.None;
+                }
+
+                Save(baseItems);
+            }
         }
 
         public void Save(IEnumerable<Order> items)
@@ -42,6 +84,8 @@ namespace Data
                 {
                     string line = string.Join(",", o.Code.ToString(), o.Description, o.Amount.ToString(CultureInfo.InvariantCulture), o.Price.ToString(CultureInfo.InvariantCulture));
                     sw.WriteLine(line);    
+
+                    o.State = ObjectState.None;
                 }
             }
         }
@@ -50,10 +94,8 @@ namespace Data
         {
             if (string.IsNullOrEmpty(CsvFileName))
                 throw new ArgumentNullException("csvFileName");
-
-            IList<Order> orders = new List<Order>();
-
-            foreach (string line in File.ReadAllLines(CsvFileName))
+            
+            foreach (string line in File.ReadLines(CsvFileName))
             {
                 string[] x = line.Split(',');
 
@@ -66,17 +108,15 @@ namespace Data
                     decimal price;
                     decimal.TryParse(x[3], out price);
 
-                    orders.Add(new Order()
-                    {
-                        Code = code,
-                        Description = x[1],
-                        Amount = amount,
-                        Price = price
-                    });
+                    yield return new Order()
+                        {
+                            Code = code,
+                            Description = x[1],
+                            Amount = amount,
+                            Price = price
+                        };
                 }
             }
-
-            return orders;
         }
     }
 }

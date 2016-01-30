@@ -1,5 +1,4 @@
-﻿
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Default" EnableEventValidation="false"%>
 
 <!DOCTYPE html>
 
@@ -11,9 +10,14 @@
             font: 12px Arial,Tahoma,Helvetica,FreeSans,sans-serif;
         }
 
-         #divHeader, #divFooter {
+        .hidden
+        {
+            display:none;
+        }
+
+        #divHeader, #divFooter {
              height: 30px;
-         }
+        }
     </style>
 
     <script src="Scripts/jquery-2.2.0.js"></script>
@@ -36,7 +40,7 @@
 <body>
     <form id="form1" runat="server">
 
-        <asp:ScriptManager ID="ScriptManager1" runat="server" />
+        <asp:ScriptManager ID="ScriptManager1" runat="server"/>
 
         <div id="divHeader">
             <asp:Label ID="Label1" runat="server" Text="Источник:"/>
@@ -48,8 +52,8 @@
             <asp:UpdatePanel ID="UpdatePanel" runat="server" >
                 <ContentTemplate>
                     <asp:GridView ID="GridOrders" runat="server" Width="100%" AutoGenerateColumns="False" AllowSorting="True" ShowHeaderWhenEmpty="True" ShowFooter="True"
-                        BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3"
-                        OnRowCommand="GridOrders_OnRowCommand">
+                        BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" DataKeyNames="Code"
+                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing">
 
                         <Columns>
                             <asp:TemplateField>
@@ -66,6 +70,13 @@
                                     <asp:LinkButton ID="lbInsert" ValidationGroup="InsertRow" runat="server" CommandName="InsertRow">Создать</asp:LinkButton>
                                 </FooterTemplate>
                             </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="№">
+                                <ItemTemplate>
+                                    <%# Container.DataItemIndex + 1 %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
                             <asp:TemplateField HeaderText="Код" InsertVisible="False" SortExpression="Code">
                                 <EditItemTemplate>
                                     <asp:Label ID="Label1" runat="server" Text='<%# Eval("Code") %>'/>
@@ -110,6 +121,11 @@
                                     <asp:TextBox ID="TbPrice" runat="server" Width="100%"/>
                                     
                                 </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField Visible="False">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="LinkBtnDblClick" runat="server" CommandName="DblClick"/>
+                                </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
                         <FooterStyle BackColor="#F7DFB5" ForeColor="#8C4510" />

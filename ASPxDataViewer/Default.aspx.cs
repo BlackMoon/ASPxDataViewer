@@ -46,11 +46,9 @@ public partial class Default : Page
             BindGrid();
     }
 
-
-
     private void BindGrid()
     {
-        GridOrders.DataSource = Orders;
+        GridOrders.DataSource = Orders.Where(o => o.State != ObjectState.Deleted);
         GridOrders.DataBind();
     }
 
@@ -62,6 +60,7 @@ public partial class Default : Page
         Enum.TryParse(value, out providerType);
 
         IDataProvider<Order> dataProvider = ProviderFactory.Instance.GetProvider(providerType);
+        dataProvider.Add(Orders.Where(o => o.State != ObjectState.None));
 
         string msg = "alert('Заказы дабавлены!')";
         ScriptManager.RegisterClientScriptBlock((sender as Control), GetType(), "alert", msg, true);
@@ -75,7 +74,7 @@ public partial class Default : Page
         Enum.TryParse(value, out providerType);
 
         IDataProvider<Order> dataProvider = ProviderFactory.Instance.GetProvider(providerType);
-        dataProvider.Save(Orders);
+        dataProvider.Save(Orders.Where(o => o.State != ObjectState.Deleted));
 
         string msg = "alert('Заказы сохранены!')";
         ScriptManager.RegisterClientScriptBlock((sender as Control), GetType(), "alert", msg, true);
@@ -94,16 +93,32 @@ public partial class Default : Page
         BindGrid();
     }
 
+    protected void GridOrders_OnRowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        GridViewRow row = e.Row;
+        if (row.RowType == DataControlRowType.DataRow)
+        {
+            LinkButton linkButton = (LinkButton) row.FindControl("LinkBtnDblClick");
+            if (linkButton != null)
+            {
+                string jsDoubleClick = ClientScript.GetPostBackClientHyperlink(linkButton, "");
+
+                e.Row.Attributes["ondblclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridOrders, "Edit$" + e.Row.RowIndex);
+            }
+        }
+
+    }
+
     protected void GridOrders_OnRowCommand(object sender, GridViewCommandEventArgs e)
     {
-        int ix;
+        int ix, code;
         decimal amount = 0, price = 0;
         string descr = null;
 
         GridViewRow row;
         TextBox textBox;
-
-        int code;
+        
+        Order order;
         switch (e.CommandName)
         {
             case "CancelUpdate":
@@ -114,7 +129,9 @@ public partial class Default : Page
             case "DeleteRow":
                 
                 code = Convert.ToInt32(e.CommandArgument);
-                Orders.RemoveAll(o => o.Code == code);
+                order = Orders.Find(o => o.Code == code);
+                if (order != null)
+                    order.State = ObjectState.Deleted;
                 
                 break;
 
@@ -146,7 +163,8 @@ public partial class Default : Page
                     Code = Orders.Max(o => o.Code) + 1,
                     Description = descr,
                     Amount = amount,
-                    Price = price
+                    Price = price,
+                    State = ObjectState.New
                 });
 
                 break;
@@ -157,7 +175,7 @@ public partial class Default : Page
 
                 code = Convert.ToInt32(e.CommandArgument);
                 
-                Order order = Orders.Find(o => o.Code == code);
+                order = Orders.Find(o => o.Code == code);
                 if (order != null)
                 {
                     row = GridOrders.Rows[ix];
@@ -177,6 +195,7 @@ public partial class Default : Page
                     order.Description = descr;
                     order.Amount = amount;
                     order.Price = price;
+                    order.State = ObjectState.Updated;
                 }
 
                 GridOrders.EditIndex = -1;
@@ -185,6 +204,12 @@ public partial class Default : Page
             
         }
 
+        BindGrid();
+    }
+
+    protected void GridOrders_OnRowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GridOrders.EditIndex = e.NewEditIndex;
         BindGrid();
     }
 }
