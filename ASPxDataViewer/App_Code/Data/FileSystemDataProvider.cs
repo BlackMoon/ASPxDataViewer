@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Configuration;
+
 // ReSharper disable NotResolvedInText
 
 namespace Data
@@ -21,10 +23,13 @@ namespace Data
         public FileSystemDataProvider()
         {
             Separator = ",";
-
-            CsvFileName = ConfigurationManager.AppSettings["csvfilename"];
-
-            CsvFileName = HttpContext.Current.Server.MapPath(CsvFileName);
+            
+            CsvFileProviderSection section = (CsvFileProviderSection)ConfigurationManager.GetSection("csvfileprovidersection");
+            if (section != null)
+            {
+                CsvFileName = HttpContext.Current.Server.MapPath(section.FileName);
+                Separator = section.Separator;
+            }
         }
 
         public void Add(IEnumerable<Order> items)

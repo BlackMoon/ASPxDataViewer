@@ -64,7 +64,7 @@
                                     <asp:LinkButton ID="lbCancel" CommandArgument='<%# Eval("Code") %>' CommandName="CancelUpdate" ForeColor="#8C4510" runat="server" CausesValidation="false">Отмена</asp:LinkButton>
                                 </EditItemTemplate>
                                 <FooterTemplate>
-                                    <asp:LinkButton ID="lbInsert" ValidationGroup="New" runat="server" CommandName="InsertRow" >Создать</asp:LinkButton>
+                                    <asp:LinkButton ID="lbInsert" ValidationGroup="InsertRow" runat="server" CommandName="InsertRow" >Создать</asp:LinkButton>
                                 </FooterTemplate>
                             </asp:TemplateField>
 
@@ -110,7 +110,7 @@
                                 <FooterTemplate>
                                     <asp:TextBox ID="TbAmountNew" runat="server" Width="140" />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
-                                        ControlToValidate="TbAmountNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" ValidationGroup="New">
+                                        ControlToValidate="TbAmountNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" ValidationGroup="InsertRow">
                                     </asp:RequiredFieldValidator>
                                 </FooterTemplate>
                             </asp:TemplateField>
@@ -128,8 +128,8 @@
                                 </ItemTemplate>
                                 <FooterTemplate>
                                     <asp:TextBox ID="TbPriceNew" runat="server" Width="140"/>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" 
-                                        ControlToValidate="TbPriceNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}" ValidationGroup="New"></asp:RequiredFieldValidator>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server"
+                                        ControlToValidate="TbPriceNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}" ValidationGroup="InsertRow"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -152,7 +152,7 @@
              
         </div>
         
-        <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="New" ForeColor="Red" runat="server" />
+        <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="InsertRow" ForeColor="Red" runat="server" />
         <asp:ValidationSummary ID="ValidationSummary2" ForeColor="Red" runat="server" />
 
         <div id="divFooter">
