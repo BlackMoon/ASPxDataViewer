@@ -92,7 +92,7 @@
                                     <asp:Label runat="server" Text='<%# Eval("Description") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbDescriptionNew" runat="server" Width="100%"/>
+                                    <asp:TextBox ID="TbDescription" runat="server" Width="100%"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Количество" >
@@ -100,18 +100,24 @@
                                 <ItemStyle Width="160" />
                                 <EditItemTemplate>
                                     <asp:TextBox ID="TbAmount" runat="server" Text='<%# Bind("Amount") %>' Width="140"/>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
-                                        ControlToValidate="TbAmount" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" >
-                                    </asp:RequiredFieldValidator>
+
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="TbAmount" Text="*" ForeColor="Red" 
+                                        ErrorMessage="Не заполнено {Количество}"/>
+
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="TbAmount" ForeColor="Red" Text="!" Font-Bold="True"
+                                        ErrorMessage="Допускаются ввод цифр c 2 знаками после запятой" ValidationExpression="^\d+(\,\d{1,2})?$" />
                                 </EditItemTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" Text='<%# Eval("Amount") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbAmountNew" runat="server" Width="140" />
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
-                                        ControlToValidate="TbAmountNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнено {Количество}" ValidationGroup="InsertRow">
-                                    </asp:RequiredFieldValidator>
+                                    <asp:TextBox ID="TbAmount" runat="server" Width="140" />
+
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="TbAmount" Text="*" ForeColor="Red" 
+                                        ErrorMessage="Не заполнено {Количество}" ValidationGroup="InsertRow"/>
+
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="TbAmount" ForeColor="Red" Text="!" Font-Bold="True"
+                                        ErrorMessage="Допускаются ввод цифр c 2 знаками после запятой" ValidationExpression="^\d+(\,\d{1,2})?$" ValidationGroup="InsertRow"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Цена">
@@ -119,17 +125,26 @@
                                 <ItemStyle Width="160" />
                                 <EditItemTemplate>
                                     <asp:TextBox ID="TbPrice" runat="server" Text='<%# Bind("Price") %>' Width="140"/>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" 
-                                        ControlToValidate="TbPrice" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}">
-                                    </asp:RequiredFieldValidator>
+
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="TbPrice" Text="*" ForeColor="Red" 
+                                        ErrorMessage="Не заполнена {Цена}"/>
+                                    
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="TbPrice" ForeColor="Red" Text="!" Font-Bold="True"
+                                        ErrorMessage="Допускаются ввод цифр c 2 знаками после запятой" ValidationExpression="^\d+(\,\d{1,2})?$" />
+                                    
                                 </EditItemTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" Text='<%# Eval("Price") %>' />
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:TextBox ID="TbPriceNew" runat="server" Width="140"/>
+                                    <asp:TextBox ID="TbPrice" runat="server" Width="140"/>
+
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server"
-                                        ControlToValidate="TbPriceNew" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}" ValidationGroup="InsertRow"/>
+                                        ControlToValidate="TbPrice" Text="*" ForeColor="Red" ErrorMessage="Не заполнена {Цена}" ValidationGroup="InsertRow"/>
+                                    
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ControlToValidate="TbPrice" ForeColor="Red" Text="!" Font-Bold="True"
+                                        ErrorMessage="Допускаются ввод цифр c 2 знаками после запятой" ValidationExpression="^\d+(\,\d{1,2})?$" ValidationGroup="InsertRow" />
+
                                 </FooterTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -143,6 +158,7 @@
                         <SortedDescendingCellStyle BackColor="#F1E5CE" />
                         <SortedDescendingHeaderStyle BackColor="#93451F" />
                     </asp:GridView>
+                    
                 </ContentTemplate>
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="BtnShow" EventName="Click" />

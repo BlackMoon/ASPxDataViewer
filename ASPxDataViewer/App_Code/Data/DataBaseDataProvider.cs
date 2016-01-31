@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Extentions;
@@ -232,13 +233,13 @@ namespace Data
             if (Connection.State != ConnectionState.Open)
                 Connection.Open();
 
-            return Connection.ExecutePocoReader("SELECT o.code, o.description, o.amount, o.price FROM orders o", 
+            return Connection.ExecutePocoReader("SELECT o.code, o.description, o.amount, o.price FROM orders o",
                 x => new Order()
                 {
-                    Code = x.GetInt32(0),
-                    Description = x.GetString(1),
-                    Amount = x.GetDecimal(2),
-                    Price = x.GetDecimal(3)
+                    Code = (int)x["code"],
+                    Description = (string)x["description"],
+                    Amount = (decimal)x["amount"],
+                    Price = (decimal)x["price"]
                 });
             
         }

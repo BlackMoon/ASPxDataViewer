@@ -138,15 +138,15 @@ public partial class Default : Page
 
                 row = GridOrders.FooterRow;
 
-                textBox = (TextBox)row.FindControl("TbDescriptionNew");
+                textBox = (TextBox)row.FindControl("TbDescription");
                 if (textBox != null)
                     descr = textBox.Text;
 
-                textBox = (TextBox)row.FindControl("TbAmountNew");
+                textBox = (TextBox)row.FindControl("TbAmount");
                 if (textBox != null)
                     decimal.TryParse(textBox.Text, out amount);
 
-                textBox = (TextBox)row.FindControl("TbPriceNew");
+                textBox = (TextBox)row.FindControl("TbPrice");
                 if (textBox != null)
                     decimal.TryParse(textBox.Text, out price);
 
