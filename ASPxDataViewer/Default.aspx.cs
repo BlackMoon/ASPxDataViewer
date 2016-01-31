@@ -42,6 +42,7 @@ public partial class Default : Page
 
     protected void Page_Init(object sender, EventArgs e)
     {
+        // enum values --> to dropDownList
         IEnumerable<ProviderType> providerTypes = Enum.GetValues(typeof(ProviderType))
                                                        .Cast<ProviderType>();
 
