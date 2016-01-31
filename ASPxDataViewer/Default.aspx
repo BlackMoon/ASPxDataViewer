@@ -13,42 +13,59 @@
         #divHeader, #divFooter {
              height: 30px;
         }
+
+        #divValidation {
+            height: 48px;
+        }
     </style>
 
     <script src="Scripts/jquery-2.2.0.js"></script>
     <script>
+        function pageLoad()  
+        {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(onEndRequest);
+        }
+
+        function onEndRequest(sender, args) {
+            var err = args.get_error();
+            if (err != undefined) {
+                alert(err.message);
+                args.set_errorHandled(true);
+            }
+        }
+
         var footerHeight, $grid;
 
         $(function() {
             $grid = $('#divGrid'),
-            footerHeight = $('#divFooter').height();
+                footerHeight = $('#divFooter').height() + $('#divValidation').height();
 
             window.onresize.call(this);
         });
 
         window.onresize = function (e) {
             var h = $(window).height();
-            //$grid.height(h - $grid.offset().top - footerHeight - 8);       // 8 = (body margin)
+            $grid.height(h - $grid.offset().top - footerHeight - 10);       // 8 = (body margin)
         }
     </script>
 </head>
 <body>
     <form id="form1" runat="server">
 
-        <asp:ScriptManager ID="ScriptManager1" runat="server"/>
+        <asp:ScriptManager ID="ScriptManager1" runat="server" OnAsyncPostBackError="ScriptManager1_OnAsyncPostBackError"/>
 
         <div id="divHeader">
             <asp:Label ID="Label1" runat="server" Text="Источник:"/>
             <asp:DropDownList ID="ListSrcProviderTypes" runat="server" />
-            <asp:Button ID="BtnShow" runat="server" Text="Показать" Width="100px" OnClick="BtnShow_Click" />
+            <asp:Button ID="BtnShow" runat="server" Text="Показать" Width="100px" OnClick="BtnShow_Click" ToolTip="Загрузка данных"/>
         </div>
 
-        <div id="divGrid" style="overflow: auto;">
+        <div id="divGrid" style="border: 1px solid #A55129; overflow: auto;">
             <asp:UpdatePanel ID="UpdatePanel" runat="server" >
                 <ContentTemplate>
                     <asp:GridView ID="GridOrders" runat="server" Width="100%" AutoGenerateColumns="False" AllowSorting="True" ShowHeaderWhenEmpty="True" ShowFooter="True"
                         BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" DataKeyNames="Code"
-                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing" OnSorting="GridOrders_OnSorting" OnSelectedIndexChanged="GridOrders_SelectedIndexChanged" >
+                        OnRowCommand="GridOrders_OnRowCommand" OnRowDataBound="GridOrders_OnRowDataBound" OnRowEditing="GridOrders_OnRowEditing" OnSorting="GridOrders_OnSorting">
 
                         <Columns>
                             <asp:TemplateField>
@@ -84,7 +101,7 @@
                                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Code") %>'/>
                                 </ItemTemplate>                                
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Описание" >
+                            <asp:TemplateField HeaderText="Описание" SortExpression="Description">
                                 <EditItemTemplate>
                                     <asp:TextBox ID="TbDescription" runat="server" Text='<%# Bind("Description") %>' Width="100%"/>
                                 </EditItemTemplate>
@@ -95,7 +112,7 @@
                                     <asp:TextBox ID="TbDescription" runat="server" Width="100%"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Количество" >
+                            <asp:TemplateField HeaderText="Количество" SortExpression="Amount">
                                 <HeaderStyle Width="160" />
                                 <ItemStyle Width="160" />
                                 <EditItemTemplate>
@@ -120,7 +137,7 @@
                                         ErrorMessage="Допускаются ввод цифр c 2 знаками после запятой" ValidationExpression="^\d+(\,\d{1,2})?$" ValidationGroup="InsertRow"/>
                                 </FooterTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Цена">
+                            <asp:TemplateField HeaderText="Цена" SortExpression="Price">
                                 <HeaderStyle Width="160" />
                                 <ItemStyle Width="160" />
                                 <EditItemTemplate>
@@ -168,17 +185,19 @@
              
         </div>
         
-        <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="InsertRow" ForeColor="Red" runat="server" />
-        <asp:ValidationSummary ID="ValidationSummary2" ForeColor="Red" runat="server" />
+        <div id="divValidation">
+            <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="InsertRow" ForeColor="Red" runat="server" />
+            <asp:ValidationSummary ID="ValidationSummary2" ForeColor="Red" runat="server" />
+        </div>
 
-        <div id="divFooter">
+        <div id="divFooter" style="position: absolute; bottom: 0">
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                 <ContentTemplate>
                     <asp:Label ID="Label2" runat="server" Text="Получатель:"/>
                     <asp:DropDownList ID="ListDstProviderTypes" runat="server" />
             
-                    <asp:Button ID="BtnAdd" runat="server" Text="Добавить" Width="100px" OnClick="BtnAdd_Click" />
-                    <asp:Button ID="BtnSave" runat="server" Text="Сохранить" Width="100px" OnClick="BtnSave_Click"/>        
+                    <asp:Button ID="BtnAdd" runat="server" Text="Добавить" Width="100px" OnClick="BtnAdd_Click" ToolTip="Обновление данных" />
+                    <asp:Button ID="BtnSave" runat="server" Text="Сохранить" Width="100px" OnClick="BtnSave_Click" ToolTip="Сохранение с перезаписью данных"/>        
 
                 </ContentTemplate>
             </asp:UpdatePanel>

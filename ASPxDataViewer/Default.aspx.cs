@@ -10,6 +10,20 @@ using Extentions;
 
 public partial class Default : Page
 {
+    #region Переменные в ViewState
+
+    private string SortColumn
+    {
+        get { return (string) ViewState["SortColumn"]; }
+        set { ViewState["SortColumn"] = value;  }
+    }
+
+    private string SortDirection
+    {
+        get { return (string)ViewState["SortDirection"]; }
+        set { ViewState["SortDirection"] = value; }
+    }
+
     private List<Order> Orders
     {
         get
@@ -23,7 +37,8 @@ public partial class Default : Page
             return orders;
         }
         set { ViewState["Orders"] = value; }
-    } 
+    }
+    #endregion
 
     protected void Page_Init(object sender, EventArgs e)
     {
@@ -45,7 +60,13 @@ public partial class Default : Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
+        {
+            // для хранения состояния сортровки
+            SortColumn = " ";
+            SortDirection = " ";
+
             BindGrid();
+        }
     }
 
     private void BindGrid()
@@ -64,7 +85,7 @@ public partial class Default : Page
         IDataProvider<Order> dataProvider = ProviderFactory.Instance.GetProvider(providerType);
         dataProvider.Add(Orders.Where(o => o.State != ObjectState.None));
 
-        string msg = "alert('Заказы дабавлены!')";
+        string msg = "alert('Заказы добавлены!')";
         ScriptManager.RegisterClientScriptBlock((sender as Control), GetType(), "alert", msg, true);
     }
 
@@ -85,7 +106,7 @@ public partial class Default : Page
     protected void BtnShow_Click(object sender, EventArgs e)
     {
         ProviderType providerType;
-
+        
         string value = ListSrcProviderTypes.SelectedValue;
         Enum.TryParse(value, out providerType);
 
@@ -207,26 +228,70 @@ public partial class Default : Page
 
     protected void GridOrders_OnSorting(object sender, GridViewSortEventArgs e)
     {
-        IEnumerable<Order> items = Orders.Where(o => o.State != ObjectState.Deleted);
-
-        String sortOn = e.SortExpression;
-        
-        
-        if (e.SortDirection == SortDirection.Ascending)
+        if (SortColumn == e.SortExpression)
         {
-            
-            
-            
-
-        //    items = items.AsEnumerable().OrderBy(lambda);
+            SortDirection = ("ASC" == SortDirection) ? "DESC" : "ASC";
+        }
+        else
+        {
+            SortColumn = e.SortExpression;
+            SortDirection = "ASC";
         }
 
-        //GridOrders.DataSource = items;
-        BindGrid();
+        // sort
+        IEnumerable<Order> items = Orders.Where(o => o.State != ObjectState.Deleted);
+        if (SortDirection == "ASC")
+        {
+            switch (SortColumn)
+            {
+                case "Code":
+                    
+                    items = items.OrderBy(o => o.Code);
+                    break;
+
+                case "Description":
+                    items = items.OrderBy(o => o.Description);
+                    break;
+
+                case "Amount":
+                    items = items.OrderBy(o => o.Amount);
+                    break;
+
+                case "Price":
+                    items = items.OrderBy(o => o.Price);
+                    break;
+            }
+        }
+        else
+        {
+            switch (SortColumn)
+            {
+                case "Code":
+
+                    items = items.OrderByDescending(o => o.Code);
+                    break;
+
+                case "Description":
+                    items = items.OrderByDescending(o => o.Description);
+                    break;
+
+                case "Amount":
+                    items = items.OrderByDescending(o => o.Amount);
+                    break;
+
+                case "Price":
+                    items = items.OrderByDescending(o => o.Price);
+                    break;
+            }
+        }
+
+        GridOrders.DataSource = items;
+        GridOrders.DataBind();
 
     }
-    protected void GridOrders_SelectedIndexChanged(object sender, EventArgs e)
-    {
 
+    protected void ScriptManager1_OnAsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e)
+    {
+        ScriptManager1.AsyncPostBackErrorMessage = e.Exception.Message;
     }
 }
