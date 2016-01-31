@@ -6,13 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Configuration;
-
 // ReSharper disable NotResolvedInText
 
 namespace Data
 {
     /// <summary>
-    /// Summary description for FileSystemDataProvider
+    /// FileSystemDataProvider
     /// </summary>
     public class FileSystemDataProvider : IDataProvider<Order>
     {

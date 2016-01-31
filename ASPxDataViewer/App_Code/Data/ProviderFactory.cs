@@ -1,7 +1,7 @@
 ﻿namespace Data
 {
     /// <summary>
-    /// Summary description for ProviderFactory
+    /// ProviderFactory - фабрика провайдеров
     /// </summary>
     public sealed class ProviderFactory
     {
@@ -19,6 +19,11 @@
         {
         }
 
+        /// <summary>
+        /// Получить провайдер по типу
+        /// </summary>
+        /// <param name="providerType">Тип провайдера</param>
+        /// <returns>Провайдер</returns>
         public IDataProvider<Order> GetProvider(ProviderType providerType)
         {
             IDataProvider<Order> dataProvider = null;

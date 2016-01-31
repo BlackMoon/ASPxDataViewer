@@ -9,7 +9,7 @@ namespace Extentions
     public static class DbExtentions
     {
         /// <summary>
-        /// Расширение IDbConnection
+        /// Расширение IDbConnection. Получает IEnumerable<T>
         /// </summary>
         /// <typeparam name="T">тип сущности</typeparam>
         /// <param name="connection">IDbConnection</param>

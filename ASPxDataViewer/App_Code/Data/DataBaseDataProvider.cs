@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Extentions;
@@ -11,7 +9,7 @@ using Extentions;
 namespace Data
 {
     /// <summary>
-    /// Summary description for DataBaseDataProvider
+    /// DataBaseDataProvider
     /// </summary>
     public class DataBaseDataProvider : IDataProvider<Order>
     {

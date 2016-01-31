@@ -287,7 +287,6 @@ public partial class Default : Page
 
         GridOrders.DataSource = items;
         GridOrders.DataBind();
-
     }
 
     protected void ScriptManager1_OnAsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e)
